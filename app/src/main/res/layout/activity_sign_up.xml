@@ -114,6 +114,7 @@
             android:layout_below="@+id/terms"
             android:text="@string/create_new_account"
             android:textColor="@android:color/white"
+            android:textAlignment="center"
             android:background="@drawable/button"/>
     </RelativeLayout>
 
