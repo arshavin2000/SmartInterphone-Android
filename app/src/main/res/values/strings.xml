@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">SmartInterphone</string>
+    <string name="create_new_account">Create new Account</string>
+    <string name="name_hint">First Name</string>
+    <string name="prename_hint">Last Name</string>
+    <string name="username_hint">Username</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="cearte_account">Create an account</string>
+    <string name="text1">By taping sign up you agree to the</string>
+    <string name="terms">Terms and conditions</string>
+
+
+
+
+
+
 </resources>
