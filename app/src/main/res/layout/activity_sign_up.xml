@@ -109,13 +109,14 @@
 
 
         <Button
+            android:id="@+id/signup"
             android:layout_width="300dp"
             android:layout_height="70dp"
             android:layout_below="@+id/terms"
+            android:background="@drawable/button"
             android:text="@string/create_new_account"
-            android:textColor="@android:color/white"
             android:textAlignment="center"
-            android:background="@drawable/button"/>
+            android:textColor="@android:color/white" />
     </RelativeLayout>
 
 
