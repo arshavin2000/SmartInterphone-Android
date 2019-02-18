@@ -9,31 +9,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.regex.Pattern;
+import java.util.Objects;
 
 import tn.esprit.innovotors.smartinterphone.services.SignupService;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText firstname, lastname, username, email, password;
-    private Button signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        Objects.requireNonNull(getSupportActionBar()).hide();
         firstname = findViewById(R.id.name);
         lastname = findViewById(R.id.prename);
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-        signup = findViewById(R.id.signup);
-
-
-
-
-
-
+        Button signup = findViewById(R.id.signup);
 
 
         email.addTextChangedListener(new TextWatcher() {
@@ -50,10 +44,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if(isTextEmpty())
-                    signup.setEnabled(true);
-
-                if(!isEmailValid()){
+                if (!isEmailValid()) {
                     email.setError(getString(R.string.invalid_email));
                 }
             }
@@ -74,10 +65,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if(isTextEmpty())
-                    signup.setEnabled(true);
-
-                if(!isPasswordValid()){
+                if (!isPasswordValid()) {
                     password.setError(getString(R.string.invalid_password));
                 }
             }
@@ -88,21 +76,21 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(isTextEmpty()){
+                if (isTextEmpty()) {
 
                     clearAll();
-                    if(firstname.getText().toString().isEmpty())
-                    firstname.setError(getString(R.string.invalid_empty));
-                    if(lastname.getText().toString().isEmpty())
+                    if (firstname.getText().toString().isEmpty())
+                        firstname.setError(getString(R.string.invalid_empty));
+                    if (lastname.getText().toString().isEmpty())
                         lastname.setError(getString(R.string.invalid_empty));
-                    if(username.getText().toString().isEmpty())
+                    if (username.getText().toString().isEmpty())
                         username.setError(getString(R.string.invalid_empty));
-                    if(email.getText().toString().isEmpty())
+                    if (email.getText().toString().isEmpty())
                         email.setError(getString(R.string.invalid_empty));
-                    if(password.getText().toString().isEmpty())
+                    if (password.getText().toString().isEmpty())
                         password.setError(getString(R.string.invalid_empty));
 
-                }else {
+                } else {
                     String fullname = firstname.getText().toString().concat(lastname.getText().toString());
                     SignupService signupService = new SignupService(getApplicationContext());
                     signupService.signupWithEmailAndPassword(email.getText().toString(), fullname, username.getText().toString(), password.getText().toString());
@@ -118,15 +106,15 @@ public class SignUpActivity extends AppCompatActivity {
                 || password.getText().toString().trim().isEmpty();
     }
 
-    private boolean isEmailValid(){
+    private boolean isEmailValid() {
         return Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches();
     }
 
-    private boolean isPasswordValid(){
+    private boolean isPasswordValid() {
         return password.getText().toString().length() > 8;
     }
 
-    private void clearAll(){
+    private void clearAll() {
         firstname.setText("");
         lastname.setText("");
         email.setText("");

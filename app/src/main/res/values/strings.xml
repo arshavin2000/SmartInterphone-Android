@@ -14,7 +14,8 @@
     <string name="signin">Sign in</string>
     <string name="don_t_have_an_account">Don\'t have an account ?</string>
     <string name="img">logo</string>
-    <string name="facebook_app_id">412705209501983</string> <string name="fb_login_protocol_scheme">fb412705209501983</string>
+    <string name="facebook_app_id">412705209501983</string>
+    <string name="fb_login_protocol_scheme">fb412705209501983</string>
     <string name="invalid_request">Invalid request</string>
     <string name="user_already_registered">User Already Registered !</string>
     <string name="internal_server_error">Internal Server Error !</string>
@@ -23,6 +24,16 @@
     <string name="invalid_empty">This field is empty</string>
     <string name="invalid_credentials">Invalid Credentials !</string>
     <string name="user_not_found">User not found</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="device_name">Device name</string>
+    <string name="device_added">Device created</string>
+    <string name="device_not_added">Add device Failed</string>
 
 
 </resources>
