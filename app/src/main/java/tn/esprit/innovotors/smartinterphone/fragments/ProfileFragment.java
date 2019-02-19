@@ -17,7 +17,7 @@ import tn.esprit.innovotors.smartinterphone.models.User;
 
 public class ProfileFragment extends Fragment {
 
-    private TextView email, name;
+    private TextView email, name ,username;
 
 
     public ProfileFragment() {
@@ -38,6 +38,7 @@ public class ProfileFragment extends Fragment {
 
         email =  root.findViewById(R.id.email);
         name =  root.findViewById(R.id.name);
+        username = root.findViewById(R.id.username);
 
         // Inflate the layout for this fragment
         UserManager userManager = new UserManager(getContext());
@@ -47,6 +48,7 @@ public class ProfileFragment extends Fragment {
 
                 email.setText(user.getEmail());
                 name.setText(user.getName());
+                username.setText(user.getUsername());
 
             }
 

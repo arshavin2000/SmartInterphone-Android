@@ -100,44 +100,7 @@ public class MessageFragment extends Fragment implements CalendarPickerControlle
         return  root;
     }
 
-    private void mockList(final List<CalendarEvent> eventList, final Context context) {
-        new Thread(new Runnable() {
-            public void run(){
 
-                MessageService messageService = new MessageService(getContext());
-                messageService.getMessages(new MessageCallback() {
-
-                    @Override
-                    public void setMessages(List<Message> messages) {
-                        for (Message message:messages
-                        ) {
-
-                            Log.e("test", "setMessages: "+ message );
-
-                            Calendar startTime1 = Calendar.getInstance();
-
-                            Calendar endTime1 = Calendar.getInstance();
-                            endTime1.add(Calendar.MONTH, 1);
-                            BaseCalendarEvent event1 = new BaseCalendarEvent("ok", "ok", "Tunis",
-                                    ContextCompat.getColor(context, R.color.colorPrimary), startTime1, endTime1, true);
-                            eventList.add(event1);
-                            Log.e("size1", "setMessages: "+ eventList.size() );
-
-
-                        }
-                    }
-
-                    @Override
-                    public void setError(String msg) {
-
-                    }
-                });
-            }
-        }).start();
-
-
-
-    }
 
     @Override
     public void onDaySelected(DayItem dayItem) {

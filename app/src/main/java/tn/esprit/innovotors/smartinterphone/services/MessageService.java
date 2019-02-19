@@ -7,8 +7,10 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,6 +25,7 @@ import java.util.List;
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
 import tn.esprit.innovotors.smartinterphone.models.Message;
+import tn.esprit.innovotors.smartinterphone.models.User;
 
 public class MessageService {
 
@@ -69,33 +72,34 @@ public class MessageService {
     }
 
 
-    public void getMessages(final MessageCallback messageCallback) {
+    public void getMessages(String user, final MessageCallback messageCallback) {
 
 
         final List<Message> messages = new ArrayList<>();
+        Log.e(TAG, "getMessages: "+BASE_URL.concat(user+"/messages") );
 
 
-        AndroidNetworking.get(BASE_URL.concat("messages"))
+        AndroidNetworking.get(BASE_URL.concat(user+"/messages"))
                 .setTag("get_Messages")
                 .setPriority(Priority.HIGH)
                 .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
+                .getAsJSONArray(new JSONArrayRequestListener() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
 
                         try {
-                            for (int i = 0; i < response.getJSONArray("data").length(); i++) {
+                            for (int i = 0; i < response.length(); i++) {
 
                                 Message message = new Message();
-                                message.setId(response.getJSONArray("data").getJSONObject(i).getString("_id"));
-                                String[] createdAt = response.getJSONArray("data").getJSONObject(i).getString("createdAt").split("T");
-                                String[] displayedAt = response.getJSONArray("data").getJSONObject(i).getString("displayAt").split("T");
-                                String[] hiddenAt = response.getJSONArray("data").getJSONObject(i).getString("hiddenAt").split("T");
+                                message.setId(response.getJSONObject(i).getString("_id"));
+                                String[] createdAt = response.getJSONObject(i).getString("createdAt").split("T");
+                                String[] displayedAt = response.getJSONObject(i).getString("displayAt").split("T");
+                                String[] hiddenAt = response.getJSONObject(i).getString("hiddenAt").split("T");
                                 message.setCreatedAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(createdAt[0]+" "+createdAt[1].substring(0,createdAt[1].length()-2)));
                                 message.setDisplayedAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(displayedAt[0]+" "+displayedAt[1].substring(0,displayedAt[1].length()-2)));
                                 message.setHiddenAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(hiddenAt[0]+" "+hiddenAt[1].substring(0,hiddenAt[1].length()-2)));
-                                message.setContent(response.getJSONArray("data").getJSONObject(i).getString("content"));
+                                message.setContent(response.getJSONObject(i).getString("content"));
                              //   message.setDevice(response.getJSONArray("data").getJSONObject(i).getString("content"));
 
 

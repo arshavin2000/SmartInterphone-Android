@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                     SigninService signinService = new SigninService(getApplicationContext());
                     signinService.signinWithEmailAndPassword(username.getText().toString(), password.getText().toString());
                     MessageService messageService = new MessageService(getApplicationContext());
-                    messageService.getMessages(new MessageCallback() {
+                    messageService.getMessages(username.getText().toString(),new MessageCallback() {
                         MessageManager messageManager = new MessageManager(getApplicationContext());
 
 
