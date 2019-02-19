@@ -3,8 +3,10 @@ package tn.esprit.innovotors.smartinterphone;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -14,9 +16,16 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.github.tibolte.agendacalendarview.models.BaseCalendarEvent;
 
+import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
+import tn.esprit.innovotors.smartinterphone.data.MessageManager;
+import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
+import tn.esprit.innovotors.smartinterphone.models.Message;
+import tn.esprit.innovotors.smartinterphone.services.MessageService;
 import tn.esprit.innovotors.smartinterphone.services.SigninService;
 
 public class LoginActivity extends AppCompatActivity {
@@ -63,6 +72,24 @@ public class LoginActivity extends AppCompatActivity {
 
                     SigninService signinService = new SigninService(getApplicationContext());
                     signinService.signinWithEmailAndPassword(username.getText().toString(), password.getText().toString());
+                    MessageService messageService = new MessageService(getApplicationContext());
+                    messageService.getMessages(new MessageCallback() {
+                        MessageManager messageManager = new MessageManager(getApplicationContext());
+
+
+                        @Override
+                        public void setMessages(List<Message> messages) {
+                            for (Message message:messages
+                            ) {
+                                messageManager.addMessage(message);
+                            }
+                        }
+
+                        @Override
+                        public void setError(String msg) {
+
+                        }
+                    });
                     SharedPreferences.Editor mEditor = mPrefs.edit();
                     mEditor.putString("login", "logged");
                     mEditor.apply();

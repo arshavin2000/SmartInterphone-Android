@@ -37,11 +37,13 @@
         android:orientation="vertical">
 
         <ImageButton
+            android:id="@+id/info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_info_black_24dp" />
 
         <ImageButton
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_info_black_24dp" />

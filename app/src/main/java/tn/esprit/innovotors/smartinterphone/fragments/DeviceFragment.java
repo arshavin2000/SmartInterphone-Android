@@ -16,11 +16,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import adapters.MyAdapter;
+import tn.esprit.innovotors.smartinterphone.adapters.MyAdapter;
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.interfaces.DeviceCallback;
 import tn.esprit.innovotors.smartinterphone.models.Device;
@@ -131,7 +130,7 @@ public class DeviceFragment extends Fragment {
                 recyclerView.setLayoutManager(layoutManager);
 
                 // specify an adapter (see also next example)
-                mAdapter = new MyAdapter(d);
+                mAdapter = new MyAdapter(d,getContext());
                 recyclerView.setAdapter(mAdapter);
 
             }

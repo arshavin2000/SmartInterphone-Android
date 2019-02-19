@@ -34,6 +34,8 @@
     <string name="device_name">Device name</string>
     <string name="device_added">Device created</string>
     <string name="device_not_added">Add device Failed</string>
+    <string name="message_created">Message created !</string>
+    <string name="message_not_added">Message not created !</string>
 
 
 </resources>

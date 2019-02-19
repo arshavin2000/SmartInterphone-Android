@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import java.util.Objects;
 
 import tn.esprit.innovotors.smartinterphone.fragments.DeviceFragment;
+import tn.esprit.innovotors.smartinterphone.fragments.MessageFragment;
 import tn.esprit.innovotors.smartinterphone.fragments.ProfileFragment;
 
 public class HomeActivity extends AppCompatActivity {
@@ -38,6 +39,9 @@ public class HomeActivity extends AppCompatActivity {
 
                     return true;
                 case R.id.navigation_notifications:
+
+                    fragmentTransaction.replace(R.id.container, new MessageFragment());
+                    fragmentTransaction.commit();
                     return true;
             }
             return false;

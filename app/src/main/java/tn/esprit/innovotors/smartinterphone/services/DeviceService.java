@@ -7,8 +7,10 @@ import android.widget.Toast;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -70,18 +72,18 @@ public class DeviceService {
                 .setTag("Add_device")
                 .setPriority(Priority.HIGH)
                 .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
+                .getAsJSONArray(new JSONArrayRequestListener() {
 
                     @Override
-                    public void onResponse(JSONObject response) {
+                    public void onResponse(JSONArray response) {
 
                         try {
-                            for (int i = 0; i < response.getJSONArray("data").length(); i++) {
+                            for (int i = 0; i < response.length(); i++) {
 
                                 Device device = new Device();
-                                device.setId(response.getJSONArray("data").getJSONObject(i).getString("_id"));
-                                device.setCode(response.getJSONArray("data").getJSONObject(i).getString("code"));
-                                device.setName(response.getJSONArray("data").getJSONObject(i).getString("name"));
+                                device.setId(response.getJSONObject(i).getString("_id"));
+                                device.setCode(response.getJSONObject(i).getString("code"));
+                                device.setName(response.getJSONObject(i).getString("name"));
                                 devices.add(device);
                                 Log.e(TAG, "onResponse: "+device );
 

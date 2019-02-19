@@ -32,6 +32,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.amitshekhar.android:android-networking:1.0.2'
     implementation 'com.facebook.android:facebook-login:4.40.0'
+    implementation 'com.github.tibolte:agendacalendarview:1.0.4'
+
+
 
 
 }

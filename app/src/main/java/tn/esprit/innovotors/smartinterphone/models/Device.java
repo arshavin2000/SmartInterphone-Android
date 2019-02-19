@@ -1,8 +1,12 @@
 package tn.esprit.innovotors.smartinterphone.models;
 
-public class Device {
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+
+public class Device extends RealmObject {
 
 
+    @PrimaryKey
     private String id;
     private String name;
     private String code;
