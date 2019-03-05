@@ -16,6 +16,8 @@ public class Message extends RealmObject {
     private Date createdAt;
     private User user;
     private Device device;
+    private String startDate;
+    private String endDate;
 
     public String getId() {
         return id;
@@ -71,6 +73,22 @@ public class Message extends RealmObject {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 
     @Override

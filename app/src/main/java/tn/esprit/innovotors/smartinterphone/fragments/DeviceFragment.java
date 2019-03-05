@@ -79,7 +79,7 @@ public class DeviceFragment extends Fragment {
                 layout.addView(code, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
                 alertDialogBuilder.setView(layout);
-                alertDialogBuilder.setTitle("ok");
+                alertDialogBuilder.setTitle("Add Device");
                 // alertDialogBuilder.setMessage("Input Student ID");
 
 

@@ -43,10 +43,13 @@ public class MessageService {
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
+
+        Log.e(TAG, "addMessage: " +message.getUser().getUsername()  );
+
         AndroidNetworking.post(BASE_URL.concat("messages"))
                 .addBodyParameter("content", message.getContent())
-                .addBodyParameter("displayAt", dateFormat.format(message.getDisplayedAt()))
-                .addBodyParameter("hiddenAt", dateFormat.format(message.getHiddenAt()))
+                .addBodyParameter("displayAt", message.getStartDate())
+                .addBodyParameter("hiddenAt", message.getEndDate())
                 .addBodyParameter("username", message.getUser().getUsername())
                 .addBodyParameter("device_id", message.getDevice().getId())
                 .setTag("Add_device")
