@@ -24,6 +24,7 @@ import java.util.List;
 
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
+import tn.esprit.innovotors.smartinterphone.models.Device;
 import tn.esprit.innovotors.smartinterphone.models.Message;
 import tn.esprit.innovotors.smartinterphone.models.User;
 
@@ -99,15 +100,80 @@ public class MessageService {
                                 String[] createdAt = response.getJSONObject(i).getString("createdAt").split("T");
                                 String[] displayedAt = response.getJSONObject(i).getString("displayAt").split("T");
                                 String[] hiddenAt = response.getJSONObject(i).getString("hiddenAt").split("T");
-                                message.setCreatedAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(createdAt[0]+" "+createdAt[1].substring(0,createdAt[1].length()-2)));
-                                message.setDisplayedAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(displayedAt[0]+" "+displayedAt[1].substring(0,displayedAt[1].length()-2)));
-                                message.setHiddenAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(hiddenAt[0]+" "+hiddenAt[1].substring(0,hiddenAt[1].length()-2)));
+                                message.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(createdAt[0]+" "+createdAt[1].substring(0,createdAt[1].length()-2)));
+                                message.setDisplayedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(displayedAt[0]+" "+displayedAt[1].substring(0,displayedAt[1].length()-2)));
+                                message.setHiddenAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(hiddenAt[0]+" "+hiddenAt[1].substring(0,hiddenAt[1].length()-2)));
                                 message.setContent(response.getJSONObject(i).getString("content"));
-                             //   message.setDevice(response.getJSONArray("data").getJSONObject(i).getString("content"));
+                                Log.e(TAG, "onResponse: " +displayedAt[0]+" "+displayedAt[1].substring(0,displayedAt[1].length()-2));
+                                Log.e(TAG, "onResponse: " +message.getDisplayedAt());
+
+
+                                //   message.setDevice(response.getJSONArray("data").getJSONObject(i).getString("content"));
 
 
                                 messages.add(message);
                                 Log.e(TAG, "onResponse: " + message);
+
+                            }
+                            messageCallback.setMessages(messages);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        messageCallback.setError(anError.toString());
+
+                    }
+                });
+
+    }
+
+    public void getMessagesByDevice(String user, final MessageCallback messageCallback, final Device device) {
+
+
+        final List<Message> messages = new ArrayList<>();
+        Log.e(TAG, "getMessages: "+BASE_URL.concat(user+"/messages") );
+
+
+        AndroidNetworking.get(BASE_URL.concat(user+"/messages"))
+                .setTag("get_Messages")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+
+                    @Override
+                    public void onResponse(JSONArray response) {
+
+                        try {
+                            for (int i = 0; i < response.length(); i++) {
+
+                                if(response.getJSONObject(i).getString("device").equals(device.getName())) {
+                                    Message message = new Message();
+                                    message.setId(response.getJSONObject(i).getString("_id"));
+                                    String[] createdAt = response.getJSONObject(i).getString("createdAt").split("T");
+                                    String[] displayedAt = response.getJSONObject(i).getString("displayAt").split("T");
+                                    String[] hiddenAt = response.getJSONObject(i).getString("hiddenAt").split("T");
+                                    message.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(createdAt[0] + " " + createdAt[1].substring(0, createdAt[1].length() - 2)));
+                                    message.setDisplayedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(displayedAt[0] + " " + displayedAt[1].substring(0, displayedAt[1].length() - 2)));
+                                    message.setHiddenAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(hiddenAt[0] + " " + hiddenAt[1].substring(0, hiddenAt[1].length() - 2)));
+                                    message.setContent(response.getJSONObject(i).getString("content"));
+                                    Log.e(TAG, "onResponse: " + displayedAt[0] + " " + displayedAt[1].substring(0, displayedAt[1].length() - 2));
+                                    Log.e(TAG, "onResponse: " + message.getDisplayedAt());
+
+
+                                    //   message.setDevice(response.getJSONArray("data").getJSONObject(i).getString("content"));
+
+
+                                    messages.add(message);
+                                    Log.e(TAG, "onResponse: " + message);
+                                }
 
                             }
                             messageCallback.setMessages(messages);

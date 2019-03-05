@@ -19,11 +19,13 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.data.DataHolder;
 import tn.esprit.innovotors.smartinterphone.data.MessageManager;
 import tn.esprit.innovotors.smartinterphone.data.UserManager;
+import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
 import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
 import tn.esprit.innovotors.smartinterphone.models.Device;
 import tn.esprit.innovotors.smartinterphone.models.Message;
@@ -63,7 +65,7 @@ public class AddMessageFragment extends Fragment {
             public void onClick(View v) {
                 Device device =DataHolder.getInstance().getDevice();
                 Log.e("device", "onClick: "+ device.getId() );
-                MessageService messageService = new MessageService(getContext());
+                final MessageService messageService = new MessageService(getContext());
                 final Message message = new Message();
                 message.setContent(messageText.getText().toString());
                 String displayAt = date_start.getText().toString() + "T"+ time_start.getText().toString()+":00.000Z";
@@ -92,6 +94,9 @@ public class AddMessageFragment extends Fragment {
                 });
                 message.setDevice(device);
                 messageService.addMessage(message);
+
+
+
             }
         });
 
@@ -174,6 +179,8 @@ public class AddMessageFragment extends Fragment {
             }
         });
     }
+
+
 
 
 }

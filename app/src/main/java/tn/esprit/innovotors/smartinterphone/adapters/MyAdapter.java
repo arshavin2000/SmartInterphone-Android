@@ -31,6 +31,7 @@ import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.data.DataHolder;
 import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.fragments.AddMessageFragment;
+import tn.esprit.innovotors.smartinterphone.fragments.MessageDetailsFragment;
 import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
 import tn.esprit.innovotors.smartinterphone.models.Device;
 import tn.esprit.innovotors.smartinterphone.models.Message;
@@ -47,13 +48,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView name1;
-        private ImageButton info, send;
+        private ImageButton info, send , calendar;
 
         private MyViewHolder(View v) {
             super(v);
             name1 = v.findViewById(R.id.device_name);
             info = v.findViewById(R.id.info);
             send = v.findViewById(R.id.send);
+            calendar = v.findViewById(R.id.calendar);
 
         }
     }
@@ -82,6 +84,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.name1.setText(mDataset.get(position).getName());
+
+        holder.calendar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                DataHolder.getInstance().setDevice(mDataset.get(position));
+                MessageDetailsFragment fragment = new MessageDetailsFragment();
+                FragmentManager fragmentManager =((AppCompatActivity) context).getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.container, fragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
+            }
+        });
         holder.info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +160,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             }
 
         });
+
+
 
 
         holder.send.setOnClickListener(new View.OnClickListener() {
