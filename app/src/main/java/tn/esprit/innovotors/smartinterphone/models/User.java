@@ -11,6 +11,7 @@ public class User extends RealmObject {
     private String username;
     private String email;
     private String token;
+    private String urlImage;
 
 
     public int getId() {
@@ -51,6 +52,14 @@ public class User extends RealmObject {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getUrlImage() {
+        return urlImage;
+    }
+
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
     }
 
     @Override

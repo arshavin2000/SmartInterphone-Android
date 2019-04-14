@@ -84,13 +84,26 @@
         android:textColor="@android:color/holo_red_dark"
         android:text="@string/create_new_account"/>
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/facebook"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@mipmap/facebook"
+        android:textColor="@android:color/white"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp" />
+        android:text="@string/facebook" />
+
+    <Button
+        android:id="@+id/google"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@mipmap/google"
+        android:text="@string/google"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/black" />
 
 
 

@@ -1,5 +1,7 @@
 package tn.esprit.innovotors.smartinterphone;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,6 +18,8 @@ import tn.esprit.innovotors.smartinterphone.services.SignupService;
 public class SignUpActivity extends AppCompatActivity {
 
     private EditText firstname, lastname, username, email, password;
+    private Button exit ;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +31,17 @@ public class SignUpActivity extends AppCompatActivity {
         username = findViewById(R.id.username);
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        exit = findViewById(R.id.exit);
+        activity = this;
         Button signup = findViewById(R.id.signup);
+
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
+
+            }
+        });
 
 
         email.addTextChangedListener(new TextWatcher() {
@@ -92,7 +106,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 } else {
                     String fullname = firstname.getText().toString().concat(lastname.getText().toString());
-                    SignupService signupService = new SignupService(getApplicationContext());
+                    SignupService signupService = new SignupService(getApplicationContext(),activity);
                     signupService.signupWithEmailAndPassword(email.getText().toString(), fullname, username.getText().toString(), password.getText().toString());
                 }
             }

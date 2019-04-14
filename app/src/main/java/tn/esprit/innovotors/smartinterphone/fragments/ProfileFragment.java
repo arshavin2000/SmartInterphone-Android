@@ -7,9 +7,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+
+import jp.wasabeef.picasso.transformations.RoundedCornersTransformation;
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
@@ -18,6 +22,7 @@ import tn.esprit.innovotors.smartinterphone.models.User;
 public class ProfileFragment extends Fragment {
 
     private TextView email, name ,username;
+    private ImageView image;
 
 
     public ProfileFragment() {
@@ -39,6 +44,10 @@ public class ProfileFragment extends Fragment {
         email =  root.findViewById(R.id.email);
         name =  root.findViewById(R.id.name);
         username = root.findViewById(R.id.username);
+        image = root.findViewById(R.id.image);
+
+
+
 
         // Inflate the layout for this fragment
         UserManager userManager = new UserManager(getContext());
@@ -49,6 +58,8 @@ public class ProfileFragment extends Fragment {
                 email.setText(user.getEmail());
                 name.setText(user.getName());
                 username.setText(user.getUsername());
+                Picasso.with(getContext()).load(user.getUrlImage()).transform(new RoundedCornersTransformation(150, 0)).fit().into(image);
+
 
             }
 

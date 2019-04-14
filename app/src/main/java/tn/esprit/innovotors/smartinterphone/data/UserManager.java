@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
@@ -55,8 +56,10 @@ public class UserManager {
 
 
                 User user = realm.where(User.class).findFirst();
-                if (user != null)
+                if (user != null) {
                     userCallback.setUser(user);
+                    Log.e("image", "execute: " + user.getUrlImage() );
+                }
                 else
                     userCallback.setError(context.getString(R.string.user_not_found));
                 Log.e("User", "execute: " + user);
@@ -66,5 +69,17 @@ public class UserManager {
         });
 
 
+    }
+
+    public  void deleteUser()
+    {
+        realm = Realm.getDefaultInstance();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<User> rows = realm.where(User.class).findAll();
+                rows.deleteAllFromRealm();
+            }
+        });
     }
 }
