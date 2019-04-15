@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,12 +16,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
-
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.data.DataHolder;
 import tn.esprit.innovotors.smartinterphone.data.MessageManager;
@@ -65,7 +63,7 @@ public class AddMessageFragment extends Fragment {
             public void onClick(View v) {
                 Device device =DataHolder.getInstance().getDevice();
                 Log.e("device", "onClick: "+ device.getId() );
-                final MessageService messageService = new MessageService(getContext());
+                final MessageService messageService = new MessageService(getContext(),getActivity());
                 final Message message = new Message();
                 message.setContent(messageText.getText().toString());
                 String displayAt = date_start.getText().toString() + "T"+ time_start.getText().toString()+":00.000Z";
@@ -92,7 +90,7 @@ public class AddMessageFragment extends Fragment {
 
                     }
                 });
-                message.setDevice(device);
+                message.setDevice(device.getId());
                 messageService.addMessage(message);
 
 

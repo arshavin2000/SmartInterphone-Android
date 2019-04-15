@@ -8,16 +8,20 @@
 
     <EditText
         android:id="@+id/message"
+        style="@style/Widget.AppCompat.EditText"
         android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:autofillHints="@string/message"
+        android:background="@drawable/field1"
+        android:gravity="top"
         android:hint="@string/message"
         android:inputType="textPersonName"
-        android:text="ok"
-        android:textAlignment="textStart"
+        android:padding="5dp"
+        android:shadowRadius="@integer/google_play_services_version"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,9 +29,10 @@
     <EditText
         android:id="@+id/date_start"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/field1"
         android:ems="10"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,10 +52,11 @@
 
     <EditText
         android:id="@+id/date_end"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/field1"
         android:ems="10"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,10 +64,11 @@
 
     <EditText
         android:id="@+id/time_start"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/field1"
         android:ems="10"
         android:inputType="time"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,12 +76,14 @@
 
     <EditText
         android:id="@+id/time_end"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/field1"
         android:ems="10"
         android:inputType="time"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_start" />
 
@@ -121,13 +130,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button"
         android:text="Add Message"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/time_end"
+        android:textColor="@color/white"
+
         app:layout_constraintVertical_bias="0.252" />
+
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/button"
+        android:text="Delete Message"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add"
+        app:layout_constraintVertical_bias="0.0" />
 </android.support.constraint.ConstraintLayout>

@@ -15,7 +15,7 @@ public class Message extends RealmObject {
     private Date hiddenAt;
     private Date createdAt;
     private User user;
-    private Device device;
+    private String device;
     private String startDate;
     private String endDate;
 
@@ -59,11 +59,11 @@ public class Message extends RealmObject {
         this.user = user;
     }
 
-    public Device getDevice() {
+    public String getDevice() {
         return device;
     }
 
-    public void setDevice(Device device) {
+    public void setDevice(String device) {
         this.device = device;
     }
 

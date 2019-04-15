@@ -25,9 +25,9 @@
     <string name="invalid_credentials">Invalid Credentials !</string>
     <string name="user_not_found">User not found</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_home">Devices</string>
+    <string name="title_dashboard">Profile</string>
+    <string name="title_notifications">Calendar</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -46,6 +46,8 @@
     <string name="message">Write your message here</string>
     <string name="facebook">Facebook</string>
     <string name="google">Google</string>
+    <string name="logout">Logout</string>
+    <string name="message_updated">Message was succesfully updated</string>
 
 
 </resources>

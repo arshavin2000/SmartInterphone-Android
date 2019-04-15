@@ -1,5 +1,6 @@
 package tn.esprit.innovotors.smartinterphone;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -42,6 +43,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public GoogleApiClient mGoogleApiClient;
     public static final String MY_PREFS_NAME = "MyPrefsFile";
+    private Activity activity;
 
 
 
@@ -80,12 +82,14 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        activity = this;
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         //setting the title
         toolbar.setTitle("SMART-INTERPHONE");
         toolbar.setTitleTextColor(Color.WHITE);
+
 
         //placing toolbar in place of actionbar
         setSupportActionBar(toolbar);
@@ -121,7 +125,7 @@ public class HomeActivity extends AppCompatActivity {
                 public void setUser(User user) {
 
 
-                    MessageService messageService = new MessageService(getApplicationContext());
+                    MessageService messageService = new MessageService(getApplicationContext(),activity);
                     messageService.getMessages(user.getUsername(), new MessageCallback() {
                         MessageManager messageManager = new MessageManager(getApplicationContext());
 

@@ -28,8 +28,11 @@ import java.util.List;
 import java.util.Objects;
 
 import tn.esprit.innovotors.smartinterphone.data.MessageManager;
+import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
+import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
 import tn.esprit.innovotors.smartinterphone.models.Message;
+import tn.esprit.innovotors.smartinterphone.models.User;
 import tn.esprit.innovotors.smartinterphone.services.FacebookService;
 import tn.esprit.innovotors.smartinterphone.services.GoogleService;
 import tn.esprit.innovotors.smartinterphone.services.MessageService;
@@ -83,6 +86,40 @@ public class LoginActivity extends AppCompatActivity {
                         // final DonorService donorService=new DonorService();
                         FacebookService facebookService = new FacebookService(getApplicationContext(), activity);
                         facebookService.getFbInfo();
+                        final MessageService messageService = new MessageService(getApplicationContext(),activity);
+                        UserManager userManager = new UserManager(getApplicationContext());
+                        MessageManager messageManager = new MessageManager(getApplicationContext());
+                        messageManager.deleteMessages();
+
+                        userManager.getUser(new UserCallback() {
+                            @Override
+                            public void setUser(User user) {
+
+
+                                messageService.getMessages(user.getUsername(), new MessageCallback() {
+                                    MessageManager messageManager = new MessageManager(getApplicationContext());
+
+                                    @Override
+                                    public void setMessages(List<Message> messages) {
+                                        for (Message message : messages
+                                        ) {
+                                            messageManager.addMessage(message);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void setError(String msg) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void setError(String msg) {
+
+                            }
+                        });
 
 
                     }
@@ -121,6 +158,41 @@ public class LoginActivity extends AppCompatActivity {
                 // Build a GoogleSignInClient with the options specified by gso.
                 mGoogleSignInClient = GoogleSignIn.getClient(getApplicationContext(), gso);
                 signIn();
+                final MessageService messageService = new MessageService(getApplicationContext(),activity);
+                UserManager userManager = new UserManager(getApplicationContext());
+                MessageManager messageManager = new MessageManager(getApplicationContext());
+                messageManager.deleteMessages();
+
+                userManager.getUser(new UserCallback() {
+                    @Override
+                    public void setUser(User user) {
+
+
+                            messageService.getMessages(user.getUsername(), new MessageCallback() {
+                            MessageManager messageManager = new MessageManager(getApplicationContext());
+
+                            @Override
+                            public void setMessages(List<Message> messages) {
+                                for (Message message : messages
+                                ) {
+                                    messageManager.addMessage(message);
+                                }
+                            }
+
+                            @Override
+                            public void setError(String msg) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void setError(String msg) {
+
+                    }
+                });
+
 
             }
         });
@@ -147,7 +219,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     SigninService signinService = new SigninService(getApplicationContext(), activity);
                     signinService.signinWithEmailAndPassword(username.getText().toString(), password.getText().toString());
-                    MessageService messageService = new MessageService(getApplicationContext());
+                    MessageService messageService = new MessageService(getApplicationContext(),activity);
+                    MessageManager messageManager = new MessageManager(getApplicationContext());
+                    messageManager.deleteMessages();
                     messageService.getMessages(username.getText().toString(), new MessageCallback() {
                         MessageManager messageManager = new MessageManager(getApplicationContext());
 

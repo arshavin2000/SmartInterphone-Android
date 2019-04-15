@@ -1,5 +1,6 @@
 package tn.esprit.innovotors.smartinterphone.services;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
@@ -23,7 +24,10 @@ import java.util.Date;
 import java.util.List;
 
 import tn.esprit.innovotors.smartinterphone.R;
+import tn.esprit.innovotors.smartinterphone.data.MessageManager;
+import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
+import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
 import tn.esprit.innovotors.smartinterphone.models.Device;
 import tn.esprit.innovotors.smartinterphone.models.Message;
 import tn.esprit.innovotors.smartinterphone.models.User;
@@ -33,10 +37,12 @@ public class MessageService {
     private static final String TAG = "MESSAGE_SERVICE";
     private static final String BASE_URL = "http://10.0.2.2:8080/api/";
     private Context context;
+    private Activity activity;
 
 
-    public MessageService(Context context) {
+    public MessageService(Context context,Activity activity) {
         this.context = context;
+        this.activity = activity;
     }
 
 
@@ -45,14 +51,14 @@ public class MessageService {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
 
-        Log.e(TAG, "addMessage: " +message.getUser().getUsername()  );
+        Log.e(TAG, "addMessage: " + message.getUser().getUsername());
 
         AndroidNetworking.post(BASE_URL.concat("messages"))
                 .addBodyParameter("content", message.getContent())
                 .addBodyParameter("displayAt", message.getStartDate())
                 .addBodyParameter("hiddenAt", message.getEndDate())
                 .addBodyParameter("username", message.getUser().getUsername())
-                .addBodyParameter("device_id", message.getDevice().getId())
+                .addBodyParameter("device_id", message.getDevice())
                 .setTag("Add_device")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -62,6 +68,43 @@ public class MessageService {
                     public void onResponse(JSONObject response) {
 
                         Toast.makeText(context, context.getString(R.string.message_created), Toast.LENGTH_LONG).show();
+                        UserManager userManager = new UserManager(context);
+                        MessageManager messageManager = new MessageManager(context);
+                        messageManager.deleteMessages();
+
+                        userManager.getUser(new UserCallback() {
+                            @Override
+                            public void setUser(User user) {
+
+
+                                getMessages(user.getUsername(), new MessageCallback() {
+                                    MessageManager messageManager = new MessageManager(context);
+
+                                    @Override
+                                    public void setMessages(List<Message> messages) {
+                                        for (Message message : messages
+                                        ) {
+                                            messageManager.addMessage(message);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void setError(String msg) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void setError(String msg) {
+
+                            }
+                        });
+
+
+                        activity.finish();
+                        activity.startActivity(activity.getIntent());
 
                     }
 
@@ -80,10 +123,10 @@ public class MessageService {
 
 
         final List<Message> messages = new ArrayList<>();
-        Log.e(TAG, "getMessages: "+BASE_URL.concat(user+"/messages") );
+        Log.e(TAG, "getMessages: " + BASE_URL.concat(user + "/messages"));
 
 
-        AndroidNetworking.get(BASE_URL.concat(user+"/messages"))
+        AndroidNetworking.get(BASE_URL.concat(user + "/messages"))
                 .setTag("get_Messages")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -100,15 +143,13 @@ public class MessageService {
                                 String[] createdAt = response.getJSONObject(i).getString("createdAt").split("T");
                                 String[] displayedAt = response.getJSONObject(i).getString("displayAt").split("T");
                                 String[] hiddenAt = response.getJSONObject(i).getString("hiddenAt").split("T");
-                                message.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(createdAt[0]+" "+createdAt[1].substring(0,createdAt[1].length()-2)));
-                                message.setDisplayedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(displayedAt[0]+" "+displayedAt[1].substring(0,displayedAt[1].length()-2)));
-                                message.setHiddenAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(hiddenAt[0]+" "+hiddenAt[1].substring(0,hiddenAt[1].length()-2)));
+                                message.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(createdAt[0] + " " + createdAt[1].substring(0, createdAt[1].length() - 2)));
+                                message.setDisplayedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(displayedAt[0] + " " + displayedAt[1].substring(0, displayedAt[1].length() - 2)));
+                                message.setHiddenAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(hiddenAt[0] + " " + hiddenAt[1].substring(0, hiddenAt[1].length() - 2)));
                                 message.setContent(response.getJSONObject(i).getString("content"));
-                                Log.e(TAG, "onResponse: " +displayedAt[0]+" "+displayedAt[1].substring(0,displayedAt[1].length()-2));
-                                Log.e(TAG, "onResponse: " +message.getDisplayedAt());
-
-
-                                //   message.setDevice(response.getJSONArray("data").getJSONObject(i).getString("content"));
+                                Log.e(TAG, "onResponse: " + displayedAt[0] + " " + displayedAt[1].substring(0, displayedAt[1].length() - 2));
+                                Log.e(TAG, "onResponse: " + message.getDisplayedAt());
+                                message.setDevice(response.getJSONObject(i).getString("device"));
 
 
                                 messages.add(message);
@@ -135,14 +176,51 @@ public class MessageService {
 
     }
 
+    public void updateMessage(final String id , final String id_device ,final  String content , final String display , final String hidden ) {
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+
+
+
+        AndroidNetworking.put(BASE_URL.concat("messages/").concat(id).concat("/").concat(id_device))
+                .addBodyParameter("content", content)
+                .addBodyParameter("displayAt", display)
+                .addBodyParameter("hiddenAt", hidden)
+                .addBodyParameter("device", id_device)
+
+                .setTag("Update_device")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Toast.makeText(context, context.getString(R.string.message_updated), Toast.LENGTH_LONG).show();
+
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Toast.makeText(context, context.getString(R.string.message_not_added), Toast.LENGTH_LONG).show();
+
+
+                    }
+                });
+    }
+
+
+
+
     public void getMessagesByDevice(String user, final MessageCallback messageCallback, final Device device) {
 
 
         final List<Message> messages = new ArrayList<>();
-        Log.e(TAG, "getMessages: "+BASE_URL.concat(user+"/messages") );
+        Log.e(TAG, "getMessages: " + BASE_URL.concat(user + "/messages"));
 
 
-        AndroidNetworking.get(BASE_URL.concat(user+"/messages"))
+        AndroidNetworking.get(BASE_URL.concat(user + "/messages"))
                 .setTag("get_Messages")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -154,7 +232,7 @@ public class MessageService {
                         try {
                             for (int i = 0; i < response.length(); i++) {
 
-                                if(response.getJSONObject(i).getString("device").equals(device.getName())) {
+                                if (response.getJSONObject(i).getString("device").equals(device.getName())) {
                                     Message message = new Message();
                                     message.setId(response.getJSONObject(i).getString("_id"));
                                     String[] createdAt = response.getJSONObject(i).getString("createdAt").split("T");
