@@ -1,7 +1,6 @@
 package tn.esprit.innovotors.smartinterphone.adapters;
 
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -14,33 +13,31 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import io.blushine.android.ui.showcase.MaterialShowcaseSequence;
+import io.blushine.android.ui.showcase.MaterialShowcaseView;
+import io.blushine.android.ui.showcase.ShowcaseConfig;
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.data.DataHolder;
-import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.fragments.AddMessageFragment;
 import tn.esprit.innovotors.smartinterphone.fragments.MessageDetailsFragment;
-import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
 import tn.esprit.innovotors.smartinterphone.models.Device;
-import tn.esprit.innovotors.smartinterphone.models.Message;
-import tn.esprit.innovotors.smartinterphone.models.User;
-import tn.esprit.innovotors.smartinterphone.services.MessageService;
+
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private List<Device> mDataset;
     private Context context;
+    private Activity activity;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -50,20 +47,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         private TextView name1;
         private ImageButton info, send , calendar;
 
-        private MyViewHolder(View v) {
+        private MyViewHolder(View v, Context context , Activity activity) {
             super(v);
             name1 = v.findViewById(R.id.device_name);
             info = v.findViewById(R.id.info);
             send = v.findViewById(R.id.send);
             calendar = v.findViewById(R.id.calendar);
 
+
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<Device> myDataset, Context context) {
+    public MyAdapter(List<Device> myDataset, Context context,Activity activity) {
         mDataset = myDataset;
         this.context = context;
+        this.activity =activity;
     }
 
     // Create new views (invoked by the layout manager)
@@ -74,7 +73,63 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // create a new view
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View v = inflater.inflate(R.layout.device_item, parent, false);
-        MyViewHolder vh = new MyViewHolder(v);
+        MyViewHolder vh = new MyViewHolder(v,context ,activity);
+       // View v1 = v.findViewById(R.id.device_name);
+       // View v2 = v.findViewById(R.id.info);
+       // View v3 = v.findViewById(R.id.send);
+
+
+        ShowcaseConfig config = new ShowcaseConfig(context);
+        config.setDelay(0);
+        config.setRenderOverNavigationBar(true);
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(activity, "5");
+        sequence.setConfig(config);
+
+        // 1
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(activity)
+                        .setTarget(vh.calendar)
+                        .setTitleText("Calendar")
+                        .setContentText("Here you can see all your messages of one device")
+                        .setDismissText("Got it")
+                        .setBackgroundColor(R.color.colorAccent)
+                        .build()
+        );
+
+
+        // We update the config so that there is half second delay between each showcase view
+        config.setDelay(500);
+
+        // 2
+
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(activity)
+                        .setTarget(vh.info)
+                        .setTitleText("Info")
+                        .setContentText("Here you can see your device info")
+                        .setDismissText("Got it")
+                        .setBackgroundColor(R.color.colorAccent)
+                        .build()
+        );
+
+
+        // 3
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(activity)
+                        .setTarget(vh.send)
+                        .setTitleText("Send")
+                        .setContentText("Here you can send a message to your device")
+                        .setDismissText("Got it")
+                        .setBackgroundColor(R.color.colorAccent)
+                        .build()
+        );
+
+
+
+        sequence.show();
+
+
         return vh;
     }
 
@@ -106,24 +161,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
+
+
                 LinearLayout layout = new LinearLayout(context);
                 LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 layout.setOrientation(LinearLayout.VERTICAL);
                 layout.setLayoutParams(parms);
 
-                layout.setGravity(Gravity.CLIP_VERTICAL);
-                layout.setPadding(2, 2, 2, 2);
+                layout.setGravity(Gravity.CENTER);
+                layout.setPadding(20, 2, 20, 2);
 
                 final TextView id = new TextView(context);
-                id.setText(mDataset.get(position).getId());
+                id.setText("ID DEVICE : "+ mDataset.get(position).getId());
                 id.setPadding(40, 40, 40, 40);
                 id.setGravity(Gravity.CENTER);
                 id.setTextSize(20);
 
                 final TextView name = new TextView(context);
                 final TextView code = new TextView(context);
-                name.setText(mDataset.get(position).getName());
-                code.setText(mDataset.get(position).getCode());
+                name.setText("Name : "+mDataset.get(position).getName());
+                code.setText("Code : "+mDataset.get(position).getCode());
+                name.setGravity(Gravity.CENTER);
+                code.setGravity(Gravity.CENTER);
+                name.setTextSize(20);
+                code.setTextSize(20);
+
 
                 LinearLayout.LayoutParams tv1Params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 tv1Params.bottomMargin = 5;
@@ -133,6 +195,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
                 alertDialogBuilder.setView(layout);
                 alertDialogBuilder.setTitle("Device Info");
+
                 // alertDialogBuilder.setMessage("Input Student ID");
 
 
@@ -148,6 +211,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
                 AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.getWindow().setBackgroundDrawableResource(R.drawable.dialog_rounded_background);
+
+
 
                 try {
                     alertDialog.show();

@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+
+
 import java.util.List;
 import java.util.Objects;
 
@@ -36,6 +38,8 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private FloatingActionButton add;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,9 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
         recyclerView = root.findViewById(R.id.my_recycler_view);
         add = root.findViewById(R.id.add);
         final DeviceService deviceService = new DeviceService(getContext());
+
+
+
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +146,7 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         recyclerView.setLayoutManager(layoutManager);
 
                         // specify an adapter (see also next example)
-                        mAdapter = new MyAdapter(d, getContext());
+                        mAdapter = new MyAdapter(d, getContext(),getActivity());
                         recyclerView.setAdapter(mAdapter);
 
                     }
@@ -163,7 +170,6 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         });
 
-        final SwipeRefreshLayout mSwipeRefreshLayout;
 
 
         // SwipeRefreshLayout
@@ -185,7 +191,7 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
             @Override
             public void run() {
 
-                mSwipeRefreshLayout.setRefreshing(true);
+              //  mSwipeRefreshLayout.setRefreshing(true);
 
                 // TODO Fetching data from server
                 fetchDevices();
@@ -208,6 +214,7 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
         userManager.getUser(new UserCallback() {
             @Override
             public void setUser(User user) {
+                mSwipeRefreshLayout.setRefreshing(true);
                 final DeviceService deviceService = new DeviceService(getContext());
                 Log.e("device", "setUser: ");
                 deviceService.getDevices(new DeviceCallback() {
@@ -223,8 +230,9 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         recyclerView.setLayoutManager(layoutManager);
 
                         // specify an adapter (see also next example)
-                        mAdapter = new MyAdapter(d, getContext());
+                        mAdapter = new MyAdapter(d, getContext(),getActivity());
                         recyclerView.setAdapter(mAdapter);
+                        mSwipeRefreshLayout.setRefreshing(false);
 
                     }
 
@@ -233,6 +241,8 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
 
                         Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                        mSwipeRefreshLayout.setRefreshing(false);
+
 
                     }
                 }, user.getUsername());
@@ -243,6 +253,8 @@ public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
                 if (getContext() != null)
                     Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+                mSwipeRefreshLayout.setRefreshing(false);
+
 
             }
         });

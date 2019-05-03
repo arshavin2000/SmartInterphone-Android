@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "tn.esprit.innovotors.smartinterphone"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -38,6 +38,9 @@ dependencies {
     // If you want to use the GPU Filters
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.github.Spiddekauga:MaterialShowcaseView:2.1.0'
+
+
 
 
 

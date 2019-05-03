@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -28,6 +30,10 @@ import com.google.android.gms.common.api.Status;
 
 import java.util.List;
 
+import io.blushine.android.ui.showcase.MaterialShowcaseSequence;
+import io.blushine.android.ui.showcase.MaterialShowcaseView;
+import io.blushine.android.ui.showcase.ShowcaseConfig;
+import io.blushine.android.ui.showcase.target.Target;
 import tn.esprit.innovotors.smartinterphone.data.MessageManager;
 import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.fragments.DeviceFragment;
@@ -91,8 +97,73 @@ public class HomeActivity extends AppCompatActivity {
         toolbar.setTitleTextColor(Color.WHITE);
 
 
+
         //placing toolbar in place of actionbar
         setSupportActionBar(toolbar);
+        View view = findViewById(R.id.navigation_home);
+        View view1 = findViewById(R.id.navigation_dashboard);
+        View view2 = findViewById(R.id.navigation_notifications);
+
+
+
+
+        ShowcaseConfig config = new ShowcaseConfig(this);
+        config.setDelay(0);
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, "2");
+        sequence.setConfig(config);
+
+        // 1
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(this)
+                        .setTarget(view)
+                        .setTitleText("Devices")
+                        .setContentText("Here you can see all your devices")
+                        .setDismissText("Got it")
+                        .setBackgroundColor(R.color.colorAccent)
+                        .build()
+        );
+
+
+        // We update the config so that there is half second delay between each showcase view
+        config.setDelay(500);
+
+        // 2
+
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(this)
+                        .setTarget(view1)
+                        .setTitleText("Profile")
+                        .setContentText("Here you can see your personal info")
+                        .setDismissText("Got it")
+                        .setBackgroundColor(R.color.colorAccent)
+                        .build()
+        );
+
+
+        // 3
+        sequence.addSequenceItem(
+                new MaterialShowcaseView.Builder(this)
+                        .setTarget(view2)
+                        .setTitleText("Calendar")
+                        .setContentText("Here you can see all your messages")
+                        .setDismissText("Got it")
+                        .setBackgroundColor(R.color.colorAccent)
+                        .build()
+        );
+
+
+
+        sequence.show();
+
+
+
+
+
+
+
+
+
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
