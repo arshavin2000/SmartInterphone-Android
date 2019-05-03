@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +28,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import tn.esprit.innovotors.smartinterphone.R;
+import tn.esprit.innovotors.smartinterphone.data.DataHolder;
 import tn.esprit.innovotors.smartinterphone.data.MessageManager;
 import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
 import tn.esprit.innovotors.smartinterphone.models.Message;
@@ -36,6 +39,9 @@ public class MessageDetailsFragment extends Fragment implements CalendarPickerCo
     Calendar minDate;
     Calendar maxDate;
     AgendaCalendarView mAgendaCalendarView;
+    List<String> devices = new ArrayList<>();
+    List<String> ids = new ArrayList<>();
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,33 +63,36 @@ public class MessageDetailsFragment extends Fragment implements CalendarPickerCo
         minDate.set(Calendar.DAY_OF_MONTH, 1);
         maxDate.add(Calendar.YEAR, 1);
 
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 MessageManager messageManager = new MessageManager(getContext());
                 messageManager.getMessage(new MessageCallback() {
-                    int i=-1;
+                    int i =-1;
 
                     @Override
                     public void setMessages(List<Message> messages) {
                         for (Message message:messages
                         ) {
 
-                            i++;
                             Log.e("test", "setMessages: "+ message.getDisplayedAt() );
 
                             Calendar startTime1 = toCalendar(message.getDisplayedAt());
 
                             Log.e("start", "setMessages: " + startTime1 );
+                            i++;
 
                             Calendar endTime1 = toCalendar(message.getHiddenAt());
                             // endTime1.add(Calendar.MONTH, 1);
                             StringBuilder stringBuilder = new StringBuilder();
-                            stringBuilder.append(message.getContent()).append("\n").append(" Start Time :").append(message.getDisplayedAt().toString().split(" ")[3]);
+                            stringBuilder.append(message.getContent()).append("\n").append(" Start Display  : ").append(message.getDisplayedAt().toString().split(" ")[3].split(":")[0]+":"+message.getDisplayedAt().toString().split(" ")[3].split(":")[1]);
                             BaseCalendarEvent event1 = new BaseCalendarEvent(stringBuilder.toString(), message.getId() + message.getDevice(), "Esprit",
                                     ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.colorPrimary), startTime1, endTime1, true);
-                           event1.setId(i);
+                            event1.setId(i);
                             eventList.add(event1);
+                            devices.add(message.getDevice());
+                            ids.add(message.getId());
                             Log.e("size1", "setMessages: "+ eventList.size() );
 
 
@@ -128,9 +137,19 @@ public class MessageDetailsFragment extends Fragment implements CalendarPickerCo
     }
 
     @Override
-    public void onEventSelected(CalendarEvent event) {
+    public void onEventSelected( CalendarEvent event) {
 
         Log.d("event", String.format("Selected event: %s", event.getId()));
+
+
+        DataHolder.getInstance().setId_device(devices.get((int) event.getId()));
+        DataHolder.getInstance().setId_message(ids.get((int) event.getId()));
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction =
+                fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.container, new UpdateMessageFragment());
+        fragmentTransaction.commit();
 
 
 

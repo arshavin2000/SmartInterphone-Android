@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +23,14 @@ import java.util.Objects;
 
 import tn.esprit.innovotors.smartinterphone.adapters.MyAdapter;
 import tn.esprit.innovotors.smartinterphone.R;
+import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.interfaces.DeviceCallback;
+import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
 import tn.esprit.innovotors.smartinterphone.models.Device;
+import tn.esprit.innovotors.smartinterphone.models.User;
 import tn.esprit.innovotors.smartinterphone.services.DeviceService;
 
-public class DeviceFragment extends Fragment {
+public class DeviceFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -117,33 +122,132 @@ public class DeviceFragment extends Fragment {
 
             }
         });
-         deviceService.getDevices(new DeviceCallback() {
+        UserManager userManager = new UserManager(getContext());
+        userManager.getUser(new UserCallback() {
             @Override
-            public void setDevices(List<Device> d) {
+            public void setUser(User user) {
+                deviceService.getDevices(new DeviceCallback() {
+                    @Override
+                    public void setDevices(List<Device> d) {
 
-                // use this setting to improve performance if you know that changes
-                // in content do not change the layout size of the RecyclerView
-                recyclerView.setHasFixedSize(true);
+                        // use this setting to improve performance if you know that changes
+                        // in content do not change the layout size of the RecyclerView
+                        recyclerView.setHasFixedSize(true);
 
-                // use a linear layout manager
-                layoutManager = new LinearLayoutManager(getContext());
-                recyclerView.setLayoutManager(layoutManager);
+                        // use a linear layout manager
+                        layoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(layoutManager);
 
-                // specify an adapter (see also next example)
-                mAdapter = new MyAdapter(d,getContext());
-                recyclerView.setAdapter(mAdapter);
+                        // specify an adapter (see also next example)
+                        mAdapter = new MyAdapter(d, getContext());
+                        recyclerView.setAdapter(mAdapter);
 
+                    }
+
+                    @Override
+                    public void setError(String msg) {
+
+
+                        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+
+                    }
+                }, user.getUsername());
             }
 
             @Override
             public void setError(String msg) {
 
-                Toast.makeText(getContext(),msg,Toast.LENGTH_LONG).show();
+                if (getContext() != null)
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
             }
         });
 
+        final SwipeRefreshLayout mSwipeRefreshLayout;
 
-        return  root;
+
+        // SwipeRefreshLayout
+        mSwipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.refresh);
+
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+//        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        /**
+         * Showing Swipe Refresh animation on activity create
+         * As animation won't start on onCreate, post runnable is used
+         */
+        mSwipeRefreshLayout.post(new Runnable() {
+
+            @Override
+            public void run() {
+
+                mSwipeRefreshLayout.setRefreshing(true);
+
+                // TODO Fetching data from server
+                fetchDevices();
+            }
+        });
+
+
+        return root;
     }
+
+    @Override
+    public void onRefresh() {
+
+        fetchDevices();
+
+    }
+
+    void fetchDevices() {
+        UserManager userManager = new UserManager(getContext());
+        userManager.getUser(new UserCallback() {
+            @Override
+            public void setUser(User user) {
+                final DeviceService deviceService = new DeviceService(getContext());
+                Log.e("device", "setUser: ");
+                deviceService.getDevices(new DeviceCallback() {
+                    @Override
+                    public void setDevices(List<Device> d) {
+
+                        // use this setting to improve performance if you know that changes
+                        // in content do not change the layout size of the RecyclerView
+                        recyclerView.setHasFixedSize(true);
+
+                        // use a linear layout manager
+                        layoutManager = new LinearLayoutManager(getContext());
+                        recyclerView.setLayoutManager(layoutManager);
+
+                        // specify an adapter (see also next example)
+                        mAdapter = new MyAdapter(d, getContext());
+                        recyclerView.setAdapter(mAdapter);
+
+                    }
+
+                    @Override
+                    public void setError(String msg) {
+
+
+                        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+
+                    }
+                }, user.getUsername());
+            }
+
+            @Override
+            public void setError(String msg) {
+
+                if (getContext() != null)
+                    Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+    }
+
+    // fisrt use
 }

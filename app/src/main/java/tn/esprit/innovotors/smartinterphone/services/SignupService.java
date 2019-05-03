@@ -23,7 +23,7 @@ public class SignupService {
 
 
     private static final String TAG ="SIGNUP_SERVICE";
-    private static final String BASE_URL = "http://10.0.2.2:8080/api/";
+    private static final String BASE_URL = "http://smart-interphone.herokuapp.com/api/";
     private Context context;
     private Activity activity;
 

@@ -25,7 +25,7 @@ public class DeviceService {
 
     private Context context;
     private static final String TAG = "DEVICE_SERVICE";
-    private static final String BASE_URL = "http://10.0.2.2:8080/api/";
+    private static final String BASE_URL = "http://smart-interphone.herokuapp.com/api/";
 
 
     public DeviceService(Context context) {
@@ -62,13 +62,13 @@ public class DeviceService {
     }
 
 
-    public void getDevices(final DeviceCallback deviceCallback) {
+    public void getDevices(final DeviceCallback deviceCallback, String username) {
 
 
         final List<Device> devices = new ArrayList<>();
 
 
-        AndroidNetworking.get(BASE_URL.concat("devices"))
+        AndroidNetworking.get(BASE_URL.concat(username).concat("/devices"))
                 .setTag("Add_device")
                 .setPriority(Priority.HIGH)
                 .build()

@@ -75,6 +75,7 @@ public class MessageFragment extends Fragment implements CalendarPickerControlle
 
                     @Override
                     public void setMessages(List<Message> messages) {
+                        Log.e("size", "setMessages: " + messages.size() );
                         for (Message message:messages
                         ) {
 
@@ -88,7 +89,7 @@ public class MessageFragment extends Fragment implements CalendarPickerControlle
                             Calendar endTime1 = toCalendar(message.getHiddenAt());
                            // endTime1.add(Calendar.MONTH, 1);
                             StringBuilder stringBuilder = new StringBuilder();
-                            stringBuilder.append(message.getContent()).append("\n").append(" Start Time :").append(message.getDisplayedAt().toString().split(" ")[3]);
+                            stringBuilder.append(message.getContent()).append("\n").append(" Start Display  : ").append(message.getDisplayedAt().toString().split(" ")[3].split(":")[0]+":"+message.getDisplayedAt().toString().split(" ")[3].split(":")[1]);
                             BaseCalendarEvent event1 = new BaseCalendarEvent(stringBuilder.toString(), message.getId() + message.getDevice(), "Esprit",
                                     ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.colorPrimary), startTime1, endTime1, true);
                             event1.setId(i);

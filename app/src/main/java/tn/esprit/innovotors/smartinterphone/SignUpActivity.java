@@ -25,7 +25,7 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        Objects.requireNonNull(getSupportActionBar()).hide();
+    //    Objects.requireNonNull(getSupportActionBar()).hide();
         firstname = findViewById(R.id.name);
         lastname = findViewById(R.id.prename);
         username = findViewById(R.id.username);
@@ -38,7 +38,8 @@ public class SignUpActivity extends AppCompatActivity {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              startActivity(new Intent(SignUpActivity.this, HomeActivity.class));
+              startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+              finish();
 
             }
         });

@@ -2,6 +2,8 @@ package tn.esprit.innovotors.smartinterphone.services;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -10,6 +12,7 @@ import com.androidnetworking.common.Priority;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.StringRequestListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +29,7 @@ import java.util.List;
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.data.MessageManager;
 import tn.esprit.innovotors.smartinterphone.data.UserManager;
+import tn.esprit.innovotors.smartinterphone.fragments.MessageFragment;
 import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
 import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
 import tn.esprit.innovotors.smartinterphone.models.Device;
@@ -35,7 +39,7 @@ import tn.esprit.innovotors.smartinterphone.models.User;
 public class MessageService {
 
     private static final String TAG = "MESSAGE_SERVICE";
-    private static final String BASE_URL = "http://10.0.2.2:8080/api/";
+    private static final String BASE_URL = "http://smart-interphone.herokuapp.com/api/";
     private Context context;
     private Activity activity;
 
@@ -51,13 +55,14 @@ public class MessageService {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
 
 
-        Log.e(TAG, "addMessage: " + message.getUser().getUsername());
+        Log.e(TAG, "addMessage: " + message.getUser().getId());
 
         AndroidNetworking.post(BASE_URL.concat("messages"))
                 .addBodyParameter("content", message.getContent())
                 .addBodyParameter("displayAt", message.getStartDate())
                 .addBodyParameter("hiddenAt", message.getEndDate())
                 .addBodyParameter("username", message.getUser().getUsername())
+                .addBodyParameter("user", String.valueOf(message.getUser().getId()))
                 .addBodyParameter("device_id", message.getDevice())
                 .setTag("Add_device")
                 .setPriority(Priority.HIGH)
@@ -135,6 +140,9 @@ public class MessageService {
                     @Override
                     public void onResponse(JSONArray response) {
 
+
+                        Log.e(TAG, "onResponse: " + response.length() );
+
                         try {
                             for (int i = 0; i < response.length(); i++) {
 
@@ -151,6 +159,7 @@ public class MessageService {
                                 Log.e(TAG, "onResponse: " + message.getDisplayedAt());
                                 message.setDevice(response.getJSONObject(i).getString("device"));
 
+                                Log.e(TAG, "onResponse: " +i );
 
                                 messages.add(message);
                                 Log.e(TAG, "onResponse: " + message);
@@ -170,6 +179,7 @@ public class MessageService {
                     public void onError(ANError anError) {
 
                         messageCallback.setError(anError.toString());
+                        Log.e(TAG, "onError: " + anError.toString() );
 
                     }
                 });
@@ -187,7 +197,6 @@ public class MessageService {
                 .addBodyParameter("displayAt", display)
                 .addBodyParameter("hiddenAt", hidden)
                 .addBodyParameter("device", id_device)
-
                 .setTag("Update_device")
                 .setPriority(Priority.HIGH)
                 .build()
@@ -196,7 +205,47 @@ public class MessageService {
                     @Override
                     public void onResponse(JSONObject response) {
 
+                        Log.e(TAG, "onResponse: update " +response );
+
                         Toast.makeText(context, context.getString(R.string.message_updated), Toast.LENGTH_LONG).show();
+                        UserManager userManager = new UserManager(context);
+                        MessageManager messageManager = new MessageManager(context);
+                        messageManager.deleteMessages();
+
+                        userManager.getUser(new UserCallback() {
+                            @Override
+                            public void setUser(User user) {
+
+
+                                getMessages(user.getUsername(), new MessageCallback() {
+                                    MessageManager messageManager = new MessageManager(context);
+
+                                    @Override
+                                    public void setMessages(List<Message> messages) {
+                                        for (Message message : messages
+                                        ) {
+                                            messageManager.addMessage(message);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void setError(String msg) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void setError(String msg) {
+
+                            }
+                        });
+
+
+                        activity.finish();
+                        activity.startActivity(activity.getIntent());
+
 
                     }
 
@@ -268,6 +317,107 @@ public class MessageService {
                     public void onError(ANError anError) {
 
                         messageCallback.setError(anError.toString());
+
+                    }
+                });
+
+    }
+
+    public void deleteMessage(String message_id) {
+
+
+
+
+        AndroidNetworking.delete(BASE_URL.concat("messages/").concat(message_id))
+                .setTag("Delete_Message")
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsString(new StringRequestListener() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Toast.makeText(context, "Message was deleted sucessfully",Toast.LENGTH_LONG).show();
+                        UserManager userManager = new UserManager(context);
+                        MessageManager messageManager = new MessageManager(context);
+                        messageManager.deleteMessages();
+
+                        userManager.getUser(new UserCallback() {
+                            @Override
+                            public void setUser(User user) {
+
+
+                                getMessages(user.getUsername(), new MessageCallback() {
+                                    MessageManager messageManager = new MessageManager(context);
+
+                                    @Override
+                                    public void setMessages(List<Message> messages) {
+                                        for (Message message : messages
+                                        ) {
+                                            messageManager.addMessage(message);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void setError(String msg) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void setError(String msg) {
+
+                            }
+                        });
+
+
+                        activity.finish();
+                        activity.startActivity(activity.getIntent());
+
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+
+                        Toast.makeText(context, "Delete action fails !",Toast.LENGTH_LONG).show();
+                        UserManager userManager = new UserManager(context);
+                        MessageManager messageManager = new MessageManager(context);
+                        messageManager.deleteMessages();
+
+                        userManager.getUser(new UserCallback() {
+                            @Override
+                            public void setUser(User user) {
+
+
+                                getMessages(user.getUsername(), new MessageCallback() {
+                                    MessageManager messageManager = new MessageManager(context);
+
+                                    @Override
+                                    public void setMessages(List<Message> messages) {
+                                        for (Message message : messages
+                                        ) {
+                                            messageManager.addMessage(message);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void setError(String msg) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void setError(String msg) {
+
+                            }
+                        });
+
+
+                        activity.finish();
+                        activity.startActivity(activity.getIntent());
 
                     }
                 });

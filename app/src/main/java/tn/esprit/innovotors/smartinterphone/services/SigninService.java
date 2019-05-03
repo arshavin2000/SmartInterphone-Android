@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,7 +25,7 @@ public class SigninService {
 
 
     private static final String TAG = "SIGNIN_SERVICE";
-    private static final String BASE_URL = "http://10.0.2.2:8080/api/";
+    private static final String BASE_URL = "http://smart-interphone.herokuapp.com/api/";
     private Context context;
     private Activity activity;
     public static final String MY_PREFS_NAME = "MyPrefsFile";
@@ -112,6 +111,7 @@ public class SigninService {
                     public void onResponse(JSONObject response) {
                         // do anything with response
                         try {
+                            Log.e(TAG, "onResponse: " + response );
                             Toast.makeText(context, response.getJSONObject("message").getString("email"), Toast.LENGTH_LONG).show();
 
                             User user = new User();
@@ -127,9 +127,6 @@ public class SigninService {
                             editor.apply();
                             activity.startActivity(new Intent(context, HomeActivity.class));
                             activity.finish();
-
-
-
                             Log.d(TAG, "onResponse: " + response);
 
                         } catch (JSONException e) {

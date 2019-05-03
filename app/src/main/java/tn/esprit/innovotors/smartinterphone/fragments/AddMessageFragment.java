@@ -1,29 +1,27 @@
 package tn.esprit.innovotors.smartinterphone.fragments;
 
-import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.content.DialogInterface;
+
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.TimePicker;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.List;
+import java.util.Date;
+import java.util.Objects;
+
 import tn.esprit.innovotors.smartinterphone.R;
+import tn.esprit.innovotors.smartinterphone.adapters.CustomDateTimePicker;
 import tn.esprit.innovotors.smartinterphone.data.DataHolder;
-import tn.esprit.innovotors.smartinterphone.data.MessageManager;
 import tn.esprit.innovotors.smartinterphone.data.UserManager;
-import tn.esprit.innovotors.smartinterphone.interfaces.MessageCallback;
 import tn.esprit.innovotors.smartinterphone.interfaces.UserCallback;
 import tn.esprit.innovotors.smartinterphone.models.Device;
 import tn.esprit.innovotors.smartinterphone.models.Message;
@@ -34,14 +32,24 @@ import tn.esprit.innovotors.smartinterphone.services.MessageService;
 public class AddMessageFragment extends Fragment {
 
 
-    private EditText messageText , time_start , time_end , date_start , date_end;
-    private Button add;
+    private TextView messageText , time_start , time_end , date_start , date_end;
+    private Button add ;
+    private ImageButton  c1, c2;
+    private CustomDateTimePicker custom;
 
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(
+
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
+
+        );
+
+
 
     }
 
@@ -57,6 +65,13 @@ public class AddMessageFragment extends Fragment {
         date_end = root.findViewById(R.id.date_end);
         date_start = root.findViewById(R.id.date_start);
         add = root.findViewById(R.id.add);
+        c1 = root.findViewById(R.id.imageButton);
+        c2 = root.findViewById(R.id.imageButton1);
+
+
+
+
+
 
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,8 +81,12 @@ public class AddMessageFragment extends Fragment {
                 final MessageService messageService = new MessageService(getContext(),getActivity());
                 final Message message = new Message();
                 message.setContent(messageText.getText().toString());
-                String displayAt = date_start.getText().toString() + "T"+ time_start.getText().toString()+":00.000Z";
-                String hiddenAt = date_end.getText().toString() + "T"+ time_end.getText().toString()+":00.000Z";
+                String displayAt = date_start.getText().toString() + "T"+ date_end.getText().toString()+":00.000Z";
+                String hiddenAt = time_start.getText().toString() + "T"+ time_end.getText().toString()+":00.000Z";
+                Log.e("time1", "onClick: " + displayAt  );
+                Log.e("time2", "onClick: " + hiddenAt  );
+
+
 
                 Log.e("date", "onClick: " + displayAt );
 
@@ -98,44 +117,67 @@ public class AddMessageFragment extends Fragment {
             }
         });
 
-
-        date_start.setOnClickListener(new View.OnClickListener() {
+        c1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                chooseDate(date_start);
-            }
-        });
 
-
-        date_end.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseDate(date_end);
-            }
-        });
-
-        time_start.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chooseTime(time_start);
+                chooseDate(date_start,date_end);
+                custom.showDialog();
 
             }
         });
 
-        time_end.setOnClickListener(new View.OnClickListener() {
+        c2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                chooseDate(time_start,time_end);
+                custom.showDialog();
+
+            }
+        });
+
+      /* date_start.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+
+            }
+        });
+
+        date_end.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                chooseDate(date_end, time_end);
+                custom.showDialog();
+
+            }
+        });*/
+      /*  time_start.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+              //  chooseTime(time_start);
+
+            }
+        });*/
+      /*  time_end.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
                 chooseTime(time_end);
 
             }
-        });
+        });*/
+
+
+
+
 
 
 
         return root;
     }
 
-    private void chooseDate(final EditText date) {
+   /* private void chooseDate(final EditText date) {
         final Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
@@ -168,15 +210,95 @@ public class AddMessageFragment extends Fragment {
 
     public void chooseTime(final EditText time){
 
-        TimePicker timePicker  = new TimePicker(getContext());
-        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
             @Override
-            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-                //Display the new time to app interface
-                time.setText(hourOfDay + ":" + minute);
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                time.setText( selectedHour + ":" + selectedMinute);
             }
-        });
-    }
+        }, 24, 60, true);//Yes 24 hour time
+        mTimePicker.setTitle("Select Time");
+        mTimePicker.show();
+    }*/
+
+   void  chooseDate(final TextView textView, final TextView time)
+   {
+        custom = new CustomDateTimePicker(getActivity(),
+               new CustomDateTimePicker.ICustomDateTimeListener() {
+
+                   @Override
+                   public void onSet(Dialog dialog, Calendar calendarSelected,
+                                     Date dateSelected, int year, String monthFullName,
+                                     String monthShortName, int monthNumber, int date,
+                                     String weekDayFullName, String weekDayShortName,
+                                     int hour24, int hour12, int min, int sec,
+                                     String AM_PM) {
+
+                       String month;
+                       if(monthNumber+1 <10)
+                       {
+                           month = "0"+String.valueOf(monthNumber+1);
+                       }else{
+                         month =  String.valueOf(monthNumber+1);
+                       }
+
+                       String day ;
+                       if(calendarSelected
+                               .get(Calendar.DAY_OF_MONTH )<10)
+                       {
+                           day = "0" + String.valueOf(calendarSelected
+                                   .get(Calendar.DAY_OF_MONTH ));
+                       }
+                       else{
+                           day =  String.valueOf(calendarSelected
+                                   .get(Calendar.DAY_OF_MONTH ));
+                       }
+
+                       String hour ;
+                               if(hour24<10)
+                               {
+                                   hour ="0"+ String.valueOf(hour24);
+                               }else{
+                                   hour = String.valueOf(hour24);
+                               }
+                               String minute ;
+
+                               if(min<10)
+                               {
+                                   minute ="0"+ String.valueOf(min);
+
+                               }else
+                               {
+                                   minute = String.valueOf(min);
+                               }
+
+
+                       textView
+                               .setText(year
+                                       + "-" + month + "-" + day
+                               );
+
+
+                       time.setText(hour + ":" + minute
+                               );
+                   }
+
+
+                   @Override
+                   public void onCancel() {
+
+                   }
+               });
+       /**
+        * Pass Directly current time format it will return AM and PM if you set
+        * false
+        */
+       custom.set24HourFormat(true);
+       /**
+        * Pass Directly current data and time to show when it pop up
+        */
+       custom.setDate(Calendar.getInstance());
+   }
 
 
 

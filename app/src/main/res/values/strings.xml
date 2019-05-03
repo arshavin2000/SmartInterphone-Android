@@ -48,6 +48,7 @@
     <string name="google">Google</string>
     <string name="logout">Logout</string>
     <string name="message_updated">Message was succesfully updated</string>
+    <string name="update">Update Message</string>
 
 
 </resources>
