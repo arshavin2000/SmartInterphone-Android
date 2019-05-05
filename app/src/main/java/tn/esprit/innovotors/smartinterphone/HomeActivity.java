@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -33,7 +32,6 @@ import java.util.List;
 import io.blushine.android.ui.showcase.MaterialShowcaseSequence;
 import io.blushine.android.ui.showcase.MaterialShowcaseView;
 import io.blushine.android.ui.showcase.ShowcaseConfig;
-import io.blushine.android.ui.showcase.target.Target;
 import tn.esprit.innovotors.smartinterphone.data.MessageManager;
 import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.fragments.DeviceFragment;
@@ -110,7 +108,7 @@ public class HomeActivity extends AppCompatActivity {
         ShowcaseConfig config = new ShowcaseConfig(this);
         config.setDelay(0);
 
-        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, "2");
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, "7");
         sequence.setConfig(config);
 
         // 1

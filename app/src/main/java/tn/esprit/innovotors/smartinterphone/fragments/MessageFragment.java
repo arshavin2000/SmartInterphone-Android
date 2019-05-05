@@ -19,6 +19,8 @@ import com.github.tibolte.agendacalendarview.models.BaseCalendarEvent;
 import com.github.tibolte.agendacalendarview.models.CalendarEvent;
 import com.github.tibolte.agendacalendarview.models.DayItem;
 
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.ConcurrentModificationException;
@@ -43,6 +45,12 @@ public class MessageFragment extends Fragment implements CalendarPickerControlle
     AgendaCalendarView mAgendaCalendarView;
     List<String> devices = new ArrayList<>();
     List<String> ids = new ArrayList<>();
+    List<String> startTime = new ArrayList<>();
+    List<String> endTime = new ArrayList<>();
+    List<String> startDate = new ArrayList<>();
+    List<String> endDate = new ArrayList<>();
+    List<String> content = new ArrayList<>();
+
 
 
     @Override
@@ -96,6 +104,12 @@ public class MessageFragment extends Fragment implements CalendarPickerControlle
                             eventList.add(event1);
                             devices.add(message.getDevice());
                             ids.add(message.getId());
+                            startTime.add(message.getDisplayedAt().toString().split(" ")[3].split(":")[0]+":"+message.getDisplayedAt().toString().split(" ")[3].split(":")[1]);
+                            endTime.add(message.getHiddenAt().toString().split(" ")[3].split(":")[0]+":"+message.getHiddenAt().toString().split(" ")[3].split(":")[1]);
+                            content.add(message.getContent());
+                            startDate.add(message.getDisplayedAt().toString().split(" ")[5]+"-"+convertMonth(message.getDisplayedAt().toString().split(" ")[1])+"-"+message.getDisplayedAt().toString().split(" ")[2]);
+                            endDate.add(message.getDisplayedAt().toString().split(" ")[5]+"-"+convertMonth(message.getHiddenAt().toString().split(" ")[1])+"-"+message.getHiddenAt().toString().split(" ")[2]);
+
                             Log.e("size1", "setMessages: "+ eventList.size() );
 
 
@@ -147,6 +161,12 @@ public class MessageFragment extends Fragment implements CalendarPickerControlle
 
         DataHolder.getInstance().setId_device(devices.get((int) event.getId()));
         DataHolder.getInstance().setId_message(ids.get((int) event.getId()));
+        DataHolder.getInstance().setStartTime(startTime.get((int) event.getId()));
+        DataHolder.getInstance().setEndTime(endTime.get((int) event.getId()));
+        DataHolder.getInstance().setStartDate(startDate.get((int) event.getId()));
+        DataHolder.getInstance().setEndDate(endDate.get((int) event.getId()));
+        DataHolder.getInstance().setContent(content.get((int) event.getId()));
+
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =
@@ -175,5 +195,72 @@ public class MessageFragment extends Fragment implements CalendarPickerControlle
         super.onAttach(context);
 
 
+    }
+
+    String convertMonth(String input2)
+    {
+        switch(input2) {
+            case "january":
+            case "Jan":
+                input2 = "01";
+                break;
+
+            case "febuary":
+            case "Feb":
+                input2 = "02";
+                break;
+
+            case "march":
+            case "Mar":
+                input2 = "03";
+                break;
+
+            case "april":
+            case "Apr":
+                input2 = "04";
+                break;
+
+            case "May":
+                input2 = "05";
+                break;
+
+            case "june":
+            case "Jun":
+                input2 = "06";
+                break;
+
+            case "july":
+            case "Jul":
+                input2 = "07";
+                break;
+
+            case "august":
+            case "Aug":
+                input2 = "08";
+                break;
+
+            case "september":
+            case "Sep":
+            case "Sept":
+                input2 = "09";
+                break;
+
+            case "october":
+            case "Oct":
+                input2 = "10";
+                break;
+
+            case "november":
+            case "Nov":
+                input2 = "11";
+                break;
+
+            case "december":
+            case "Dec":
+                input2 = "12";
+                break;
+        }
+
+        return  input2;
     }
 }

@@ -62,6 +62,15 @@ public class UpdateMessageFragment extends Fragment {
         c2 = root.findViewById(R.id.imageButton1);
 
 
+        date_end.setText(DataHolder.getInstance().getStartTime());
+        time_end.setText(DataHolder.getInstance().getEndTime());
+        messageText.setText(DataHolder.getInstance().getContent());
+        date_start.setText(DataHolder.getInstance().getStartDate());
+        time_start.setText(DataHolder.getInstance().getEndDate());
+
+
+
+
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,8 +90,8 @@ public class UpdateMessageFragment extends Fragment {
                 final MessageService messageService = new MessageService(getContext(), getActivity());
 
 
-                String displayAt = date_start.getText().toString() + "T"+ date_end.getText().toString()+":00.000Z";
-                String hiddenAt = time_start.getText().toString() + "T"+ time_end.getText().toString()+":00.000Z";
+                String displayAt = date_start.getText().toString() + "T"+ date_end.getText().toString()+":00+01:00";
+                String hiddenAt = time_start.getText().toString() + "T"+ time_end.getText().toString()+":00+01:00";
                 messageService.updateMessage(DataHolder.getInstance().getId_message(), DataHolder.getInstance().getId_device(), messageText.getText().toString(), displayAt, hiddenAt);
                 UserManager userManager = new UserManager(getContext());
                 MessageManager messageManager = new MessageManager(getContext());

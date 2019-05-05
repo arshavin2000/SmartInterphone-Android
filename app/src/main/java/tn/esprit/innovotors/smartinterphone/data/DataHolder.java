@@ -1,7 +1,6 @@
 package tn.esprit.innovotors.smartinterphone.data;
 
 
-import java.util.ArrayList;
 
 import tn.esprit.innovotors.smartinterphone.models.Device;
 import tn.esprit.innovotors.smartinterphone.models.Message;
@@ -23,6 +22,11 @@ public class DataHolder {
     private Message message;
     private String id_message;
     private  String id_device;
+    private String startTime;
+    private String endTime;
+    private  String content;
+    private String startDate;
+    private String endDate;
 
     public Device getDevice() {
         return device;
@@ -55,5 +59,45 @@ public class DataHolder {
 
     public void setId_device(String id_device) {
         this.id_device = id_device;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
     }
 }

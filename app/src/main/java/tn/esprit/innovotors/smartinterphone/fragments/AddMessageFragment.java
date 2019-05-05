@@ -81,8 +81,8 @@ public class AddMessageFragment extends Fragment {
                 final MessageService messageService = new MessageService(getContext(),getActivity());
                 final Message message = new Message();
                 message.setContent(messageText.getText().toString());
-                String displayAt = date_start.getText().toString() + "T"+ date_end.getText().toString()+":00.000Z";
-                String hiddenAt = time_start.getText().toString() + "T"+ time_end.getText().toString()+":00.000Z";
+                String displayAt = date_start.getText().toString() + "T"+ date_end.getText().toString()+":00+01:00";
+                String hiddenAt = time_start.getText().toString() + "T"+ time_end.getText().toString()+":00+01:00";
                 Log.e("time1", "onClick: " + displayAt  );
                 Log.e("time2", "onClick: " + hiddenAt  );
 

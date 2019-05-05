@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.data.MessageManager;
@@ -151,9 +152,9 @@ public class MessageService {
                                 String[] createdAt = response.getJSONObject(i).getString("createdAt").split("T");
                                 String[] displayedAt = response.getJSONObject(i).getString("displayAt").split("T");
                                 String[] hiddenAt = response.getJSONObject(i).getString("hiddenAt").split("T");
-                                message.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(createdAt[0] + " " + createdAt[1].substring(0, createdAt[1].length() - 2)));
-                                message.setDisplayedAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(displayedAt[0] + " " + displayedAt[1].substring(0, displayedAt[1].length() - 2)));
-                                message.setHiddenAt(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(hiddenAt[0] + " " + hiddenAt[1].substring(0, hiddenAt[1].length() - 2)));
+                                message.setCreatedAt(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ", Locale.getDefault()).parse(createdAt[0] + "T" + createdAt[1].substring(0, createdAt[1].length() - 5)+"-0000"));
+                                message.setDisplayedAt(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ",Locale.getDefault() ).parse(displayedAt[0] + "T" + displayedAt[1].substring(0, displayedAt[1].length() - 5)+"-0000"));
+                                message.setHiddenAt(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ",Locale.getDefault()).parse(hiddenAt[0] + "T" + hiddenAt[1].substring(0, hiddenAt[1].length() - 5)+"-0000"));
                                 message.setContent(response.getJSONObject(i).getString("content"));
                                 Log.e(TAG, "onResponse: " + displayedAt[0] + " " + displayedAt[1].substring(0, displayedAt[1].length() - 2));
                                 Log.e(TAG, "onResponse: " + message.getDisplayedAt());

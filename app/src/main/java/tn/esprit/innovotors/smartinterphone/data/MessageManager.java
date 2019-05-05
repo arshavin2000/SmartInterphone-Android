@@ -38,7 +38,7 @@ public class MessageManager {
                         realm.insert(message);
 
                     } catch (RealmPrimaryKeyConstraintException e) {
-                        Toast.makeText(context, "Primary Key exists, Press Update instead", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(context, "Primary Key exists, Press Update instead", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
