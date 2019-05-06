@@ -76,44 +76,50 @@ public class AddMessageFragment extends Fragment {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Device device =DataHolder.getInstance().getDevice();
-                Log.e("device", "onClick: "+ device.getId() );
-                final MessageService messageService = new MessageService(getContext(),getActivity());
-                final Message message = new Message();
-                message.setContent(messageText.getText().toString());
-                String displayAt = date_start.getText().toString() + "T"+ date_end.getText().toString()+":00+01:00";
-                String hiddenAt = time_start.getText().toString() + "T"+ time_end.getText().toString()+":00+01:00";
-                Log.e("time1", "onClick: " + displayAt  );
-                Log.e("time2", "onClick: " + hiddenAt  );
+
+                if (date_start.getText().toString().isEmpty() || date_end.getText().toString().isEmpty() || time_start.getText().toString().isEmpty()
+                        || time_start.getText().toString().isEmpty() || messageText.getText().toString().isEmpty()) {
+
+                    Toast.makeText(getContext(),"Please all fileds are required ! ",Toast.LENGTH_LONG).show();
+
+                } else {
+                    Device device = DataHolder.getInstance().getDevice();
+                    Log.e("device", "onClick: " + device.getId());
+                    final MessageService messageService = new MessageService(getContext(), getActivity());
+                    final Message message = new Message();
+                    message.setContent(messageText.getText().toString());
+                    String displayAt = date_start.getText().toString() + "T" + date_end.getText().toString() + ":00+01:00";
+                    String hiddenAt = time_start.getText().toString() + "T" + time_end.getText().toString() + ":00+01:00";
+                    Log.e("time1", "onClick: " + displayAt);
+                    Log.e("time2", "onClick: " + hiddenAt);
 
 
+                    Log.e("date", "onClick: " + displayAt);
 
-                Log.e("date", "onClick: " + displayAt );
+                    //  message.setDisplayedAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(displayAt));
+                    //  message.setHiddenAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(hiddenAt));
+                    message.setStartDate(displayAt);
+                    message.setEndDate(hiddenAt);
 
-                //  message.setDisplayedAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(displayAt));
-                //  message.setHiddenAt(new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(hiddenAt));
-                message.setStartDate(displayAt);
-                message.setEndDate(hiddenAt);
+                    UserManager userManager = new UserManager(getContext());
+                    userManager.getUser(new UserCallback() {
+                        @Override
+                        public void setUser(User user) {
+                            message.setUser(user);
+                        }
 
-                UserManager userManager = new UserManager(getContext());
-                userManager.getUser(new UserCallback() {
-                    @Override
-                    public void setUser(User user) {
-                        message.setUser(user);
-                    }
+                        @Override
+                        public void setError(String msg) {
 
-                    @Override
-                    public void setError(String msg) {
+                            Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
 
-                        Toast.makeText(getContext(),msg,Toast.LENGTH_LONG).show();
-
-                    }
-                });
-                message.setDevice(device.getId());
-                messageService.addMessage(message);
-
+                        }
+                    });
+                    message.setDevice(device.getId());
+                    messageService.addMessage(message);
 
 
+                }
             }
         });
 

@@ -80,10 +80,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
 
         ShowcaseConfig config = new ShowcaseConfig(context);
-        config.setDelay(0);
+       // config.setDelay(0);
         config.setRenderOverNavigationBar(false);
 
-        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(activity, "7");
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(activity, "fsfdfgsgsfs");
         sequence.setConfig(config);
 
         // 1
