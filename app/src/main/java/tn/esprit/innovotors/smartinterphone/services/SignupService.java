@@ -15,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import tn.esprit.innovotors.smartinterphone.HomeActivity;
+import tn.esprit.innovotors.smartinterphone.LoginActivity;
 import tn.esprit.innovotors.smartinterphone.R;
 import tn.esprit.innovotors.smartinterphone.data.UserManager;
 import tn.esprit.innovotors.smartinterphone.models.User;
@@ -53,7 +54,7 @@ public class SignupService {
                         try {
                             Toast.makeText(context,response.getString("message"),Toast.LENGTH_LONG).show();
                             Log.d(TAG, "onResponse: " + response.getString("message"));
-                            activity.startActivity(new Intent(context, HomeActivity.class));
+                            activity.startActivity(new Intent(context, LoginActivity.class));
                             activity.finish();
 
 

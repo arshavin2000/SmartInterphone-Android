@@ -154,4 +154,28 @@ public class SigninService {
                 });
 
     }
+
+    public void forgotpassword(String email)
+    {
+        AndroidNetworking.post(BASE_URL.concat("user/forgot_password"))
+                .addHeaders("content-type", "application/json")
+                .setTag("FORGET_PASSWORD")
+                .addBodyParameter("email" , email)
+                .setPriority(Priority.HIGH)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        Toast.makeText(context,"Check your email please to reset your password",Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        Toast.makeText(context,"Operation failed !",Toast.LENGTH_LONG).show();
+
+                    }
+                });
+
+    }
 }
